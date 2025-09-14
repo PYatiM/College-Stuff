@@ -5,7 +5,9 @@
 void vernamCipher(char text[], char key[]) {
     int len = strlen(text);
     for (int i = 0; i < len; i++) {
-        text[i] = ((toupper(text[i]) - 'A') ^ (toupper(key[i]) - 'A')) % 26 + 'A';
+        if (isalpha(text[i]) && isalpha(key[i])){
+            text[i] = ((toupper(text[i]) - 'A') ^ (toupper(key[i]) - 'A')) % 26 + 'A';
+        }
     }
 }
 
@@ -19,5 +21,7 @@ int main() {
     vernamCipher(text, key);
     printf("Encrypted: %s\n", text);
 
+    vernamCipher(text, key);
+    printf("Decrypted : %s\n", text);
     return 0;
 }
