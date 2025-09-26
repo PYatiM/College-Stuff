@@ -71,3 +71,29 @@ int main()
     return 0;
 }
 
+
+// OUTPUT
+// Enter no.of Processes: 4
+// Enter the Burst times..
+// P1	:3
+// P2	:5
+// P3	:2
+// P4	:7
+
+// 	Gantt Chart
+// ProcessID 	 From Time	To Time
+//       3              0              2
+//       1              2              5
+//       2              5             10
+//       4             10             17
+
+
+// Process ID	Waiting Time	Turn Around Time
+// 	3		0		2
+// 	1		2		5
+// 	2		5		10
+// 	4		10		17
+// Total Waiting Time:17
+// Total TurnAround Time:34
+// Average Waiting Time:4.25
+// Average Turn Around Time:8.50
