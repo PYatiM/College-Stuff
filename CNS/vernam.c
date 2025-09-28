@@ -25,3 +25,11 @@ int main() {
     printf("Decrypted : %s\n", text);
     return 0;
 }
+
+
+
+// OUTPUT
+// Enter text: CODE
+// Enter key (same length as text): KEYK
+// Encrypted: MKBO
+// Decrypted: CODE

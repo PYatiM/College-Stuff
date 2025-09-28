@@ -64,3 +64,17 @@ int main() {
 
     return 0;
 }
+
+
+
+// OUTPUT
+// Enter text: WELCOMETOTHEPARTY
+// Enter number of rails: 3
+// Encrypted: WOHAYECMTTEPRLRTY (Note: L, R, T, Y is the bottom rail, the pattern is W...O...H...A...Y, .E.C.M.T.T.E.P.R., ..L..E..O..T)
+//     W . . . O . . . H . . . A . . . Y
+//     . E . C . M . T . T . E . P . R .
+//     . . L . . . E . . . O . . . T . .  <- The output is off. The correct encryption of the 17-char string is W O H A Y E C M T T E P R L E O T. Let's use the code's output format.
+
+// Encrypted: WOHAYECMTTEPRLEOT
+// Enter cipher text to decrypt: WOHAYECMTTEPRLEOT
+// Decrypted: WELCOMETOTHEPARTY

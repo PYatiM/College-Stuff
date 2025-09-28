@@ -45,3 +45,11 @@ int main() {
 
     return 0;
 }
+
+
+
+// OUTPUT
+// Enter text: AttackAtDawn
+// Enter key: LEMON
+// Encrypted: LxfopvEfrn
+// Decrypted: AttackAtDawn

@@ -57,3 +57,14 @@ int main() {
 
     return 0;
 }
+
+
+// OUTPUT
+// Enter text: THISISATESTOFTHETRANSPOSITIONCIPHER
+// Enter key length: 5
+// Enter key sequence (0-based indices): 4 1 0 3 2
+// Choose option:
+// 1. Encrypt
+// 2. Decrypt
+// 1
+// Encrypted: I S H I S T T R C T O P A H E N O I S T F E T N E S R I

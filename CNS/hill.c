@@ -102,3 +102,18 @@ int main() {
 
     return 0;
 }
+
+
+// Enter 3x3 key matrix:
+// 6
+// 24
+// 1
+// 13
+// 16
+// 10
+// 20
+// 17
+// 15
+// Enter text (multiple of 3 letters, uppercase A-Z): ACT
+// Encrypted text: POH
+// Decrypted text: ACT

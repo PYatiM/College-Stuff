@@ -92,3 +92,11 @@ int main() {
 
     return 0;
 }
+
+
+
+// OUTPUT
+// Enter key: MONARCHY
+// Enter text (even length, no J): CODE
+// Encrypted text: HNED
+// Decrypted text: CODE
