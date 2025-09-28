@@ -51,3 +51,13 @@ int main() {
 
     return 0;
 }
+
+
+// OUTPUT
+// Enter a message (no spaces): Hello-123!
+// Enter the key: 3
+// Choose an option:
+// 1. Encrypt
+// 2. Decrypt
+// 1
+// Encrypted message: Khoor,456"
