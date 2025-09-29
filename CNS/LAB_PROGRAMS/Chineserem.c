@@ -68,11 +68,6 @@
 
 #include <stdio.h>
 #include <stdlib.h>
-#include <math.h>
-#include <string.h>
-#include <stdbool.h>
-#include <ctype.h>
-#include <time.h>
 
 int gcd(int a, int b) {
     if (b == 0)
