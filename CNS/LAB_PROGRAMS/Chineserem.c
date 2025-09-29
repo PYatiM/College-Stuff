@@ -69,25 +69,38 @@
 #include <stdio.h>
 #include <stdlib.h>
 
+// Function to calculate the GCD of two numbers
 int gcd(int a, int b) {
     if (b == 0)
         return a;
     return gcd(b, a % b);
 }
-int modulo(int a, int b){
-	int q, r, t1=1, t0=0, tn, oa = a;
-	while(b!=0){
-		q = a / b;
-		r = a % b;
-		a = b;
-		b = r;
-		tn = t0 - (q*t1);
-		t0 = t1;
-		t1 = tn;
-	}
-	if(t0 < 0) t0 += oa;
-	return t0;
+
+// Extended Euclidean Algorithm to find the modular inverse
+int modulo(int a, int b) {
+    int q, r, t1 = 1, t0 = 0, tn, oa = a;
+    while (b != 0) {
+        q = a / b;
+        r = a % b;
+        a = b;
+        b = r;
+        tn = t0 - (q * t1);
+        t0 = t1;
+        t1 = tn;
+    }
+    // If the modular inverse is negative, we add the modulus to make it positive
+    if (t0 < 0)
+        t0 += oa;
+    
+    // If no modular inverse exists, return -1
+    if (a != 1) {
+        return -1; // No inverse exists
+    }
+
+    return t0;
 }
+
+// Function to solve the system of congruences using the Chinese Remainder Theorem
 int chineseRemainderTheorem(int a[], int m[], int n) {
     int M = 1; // Product of all moduli
     for (int i = 0; i < n; i++) {
@@ -97,19 +110,28 @@ int chineseRemainderTheorem(int a[], int m[], int n) {
     int x = 0; // Result
     for (int i = 0; i < n; i++) {
         int Mi = M / m[i];
-        int Mi_inv = modInverse(Mi, m[i]);
+        int Mi_inv = modulo(Mi, m[i]);
+        
+        // If there's no modular inverse, CRT cannot solve the system
+        if (Mi_inv == -1) {
+            printf("No modular inverse exists for modulus %d. Exiting.\n", m[i]);
+            return -1;
+        }
+
+        // Add the contribution of the current congruence
         x += a[i] * Mi * Mi_inv;
     }
 
-    return x % M;
+    return x % M; // Return the solution modulo the product of all moduli
 }
+
 int main() {
     int n;
     printf("Enter the number of equations: ");
     scanf("%d", &n);
 
-    int *a = (int *)malloc(n * sizeof(int));
-    int *m = (int *)malloc(n * sizeof(int));
+    int *a = (int *)malloc(n * sizeof(int)); // Remainders array
+    int *m = (int *)malloc(n * sizeof(int)); // Moduli array
 
     printf("Enter the remainders (a_i) and moduli (m_i):\n");
     for (int i = 0; i < n; i++) {
@@ -117,6 +139,12 @@ int main() {
         scanf("%d", &a[i]);
         printf("          mod ");
         scanf("%d", &m[i]);
+    }
+
+    // Display the system of congruences
+    printf("\nThe system of congruences is:\n");
+    for (int i = 0; i < n; i++) {
+        printf("x ≡ %d (mod %d)\n", a[i], m[i]);
     }
 
     // Check if moduli are pairwise coprime
@@ -132,12 +160,35 @@ int main() {
     }
 
     int result = chineseRemainderTheorem(a, m, n);
-    printf("The solution is x ≡ %d (mod %d)\n", result, m[0] * m[1] * m[2]); // Assuming n=3 for simplicity
+    if (result != -1) {
+        int M = 1; // Calculate the product of all moduli for the final modulus
+        for (int i = 0; i < n; i++) {
+            M *= m[i];
+        }
+
+        // Calculate the exact value of x
+        int exact_x = result;
+        if (exact_x < 0) {
+            exact_x += M; // Ensure it's a positive solution
+        }
+
+        // Display the exact value of x
+        printf("\nThe exact solution for x is: %d\n", exact_x);
+
+        // Also print the equation form
+        printf("\nThe system of congruences with the solution is:\n");
+        for (int i = 0; i < n; i++) {
+            printf("x ≡ %d (mod %d)\n", a[i], m[i]);
+        }
+        printf("x = %d (mod %d)\n", exact_x, M); // This will display the exact solution as well
+    }
 
     free(a);
     free(m);
     return 0;
 }
+
+
 // The Chinese Remainder Theorem (CRT) is used to solve a system of simultaneous congruences.
 // It finds a solution that satisfies all the given modular equations.
 // The moduli must be pairwise coprime (i.e., gcd of each pair is 1).
