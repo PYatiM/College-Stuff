@@ -74,13 +74,19 @@ int gcd(int a, int b) {
         return a;
     return gcd(b, a % b);
 }
-int modInverse(int a, int m) {
-    a = a % m;
-    for (int x = 1; x < m; x++) {
-        if ((a * x) % m == 1)
-            return x;
-    }
-    return -1; // Inverse doesn't exist
+int modulo(int a, int b){
+	int q, r, t1=1, t0=0, tn, oa = a;
+	while(b!=0){
+		q = a / b;
+		r = a % b;
+		a = b;
+		b = r;
+		tn = t0 - (q*t1);
+		t0 = t1;
+		t1 = tn;
+	}
+	if(t0 < 0) t0 += oa;
+	return t0;
 }
 int chineseRemainderTheorem(int a[], int m[], int n) {
     int M = 1; // Product of all moduli
