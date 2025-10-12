@@ -6,63 +6,61 @@ import java.nio.ByteBuffer;
 import java.security.SecureRandom;
 import java.util.Base64;
 
-public class ShortAES {
+public class CompactAES {
 
-    // AES is a block cipher, and GCM is a recommended mode of operation.
-    // GCM is an authenticated encryption mode, which provides confidentiality and authenticity.
     private static final String ALGORITHM = "AES/GCM/NoPadding";
-    private static final int KEY_SIZE = 256; // Can be 128, 192, or 256
-    private static final int GCM_IV_LENGTH = 12; // 96 bits is recommended for GCM
-    private static final int GCM_TAG_LENGTH = 128; // Authentication tag length in bits
+    private static final int KEY_SIZE = 256;
+    private static final int IV_LENGTH = 12; // 96 bits is recommended
+    private static final int TAG_LENGTH = 128; // in bits
 
-    public static void main(String[] args) {
-        try {
-            String plainText = "This is a modern secret message.";
-            System.out.println("Original: " + plainText);
+    public static String encrypt(String plainText, SecretKey key) throws Exception {
+        byte[] iv = new byte[IV_LENGTH];
+        new SecureRandom().nextBytes(iv); // Create a random IV
 
-            // 1. Generate a strong AES key
-            KeyGenerator keyGenerator = KeyGenerator.getInstance("AES");
-            keyGenerator.init(KEY_SIZE);
-            SecretKey secretKey = keyGenerator.generateKey();
+        Cipher cipher = Cipher.getInstance(ALGORITHM);
+        GCMParameterSpec gcmSpec = new GCMParameterSpec(TAG_LENGTH, iv);
+        cipher.init(Cipher.ENCRYPT_MODE, key, gcmSpec);
+        
+        byte[] cipherText = cipher.doFinal(plainText.getBytes());
 
-            // --- Encryption ---
-            Cipher cipher = Cipher.getInstance(ALGORITHM);
+        // Prepend IV to ciphertext for decryption
+        byte[] encrypted = ByteBuffer.allocate(iv.length + cipherText.length)
+                .put(iv).put(cipherText).array();
+        
+        return Base64.getEncoder().encodeToString(encrypted);
+    }
 
-            // Generate a random Initialization Vector (IV)
-            byte[] iv = new byte[GCM_IV_LENGTH];
-            new SecureRandom().nextBytes(iv);
-            
-            GCMParameterSpec gcmParameterSpec = new GCMParameterSpec(GCM_TAG_LENGTH, iv);
-            cipher.init(Cipher.ENCRYPT_MODE, secretKey, gcmParameterSpec);
-            
-            byte[] encryptedBytes = cipher.doFinal(plainText.getBytes());
+    public static String decrypt(String encryptedText, SecretKey key) throws Exception {
+        byte[] decoded = Base64.getDecoder().decode(encryptedText);
+        ByteBuffer bb = ByteBuffer.wrap(decoded);
 
-            // Prepend the IV to the ciphertext for use during decryption
-            ByteBuffer byteBuffer = ByteBuffer.allocate(iv.length + encryptedBytes.length);
-            byteBuffer.put(iv);
-            byteBuffer.put(encryptedBytes);
-            byte[] cipherMessage = byteBuffer.array();
+        // Extract the IV from the beginning
+        byte[] iv = new byte[IV_LENGTH];
+        bb.get(iv);
+        
+        // Extract the actual ciphertext
+        byte[] cipherText = new byte[bb.remaining()];
+        bb.get(cipherText);
 
-            String encryptedText = Base64.getEncoder().encodeToString(cipherMessage);
-            System.out.println("Encrypted: " + encryptedText);
+        Cipher cipher = Cipher.getInstance(ALGORITHM);
+        GCMParameterSpec gcmSpec = new GCMParameterSpec(TAG_LENGTH, iv);
+        cipher.init(Cipher.DECRYPT_MODE, key, gcmSpec);
 
-            // --- Decryption ---
-            // Extract the IV from the beginning of the cipher message
-            ByteBuffer decryptBuffer = ByteBuffer.wrap(Base64.getDecoder().decode(encryptedText));
-            byte[] ivToDecrypt = new byte[GCM_IV_LENGTH];
-            decryptBuffer.get(ivToDecrypt);
-            byte[] encryptedBytesToDecrypt = new byte[decryptBuffer.remaining()];
-            decryptBuffer.get(encryptedBytesToDecrypt);
+        return new String(cipher.doFinal(cipherText));
+    }
 
-            // Re-initialize the cipher for decryption
-            GCMParameterSpec decryptSpec = new GCMParameterSpec(GCM_TAG_LENGTH, ivToDecrypt);
-            cipher.init(Cipher.DECRYPT_MODE, secretKey, decryptSpec);
+    public static void main(String[] args) throws Exception {
+        String plainText = "This is a modern secret message.";
+        System.out.println("Original: " + plainText);
 
-            byte[] decryptedBytes = cipher.doFinal(encryptedBytesToDecrypt);
-            System.out.println("Decrypted: " + new String(decryptedBytes));
+        KeyGenerator keyGen = KeyGenerator.getInstance("AES");
+        keyGen.init(KEY_SIZE);
+        SecretKey secretKey = keyGen.generateKey();
 
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        String encryptedText = encrypt(plainText, secretKey);
+        System.out.println("Encrypted: " + encryptedText);
+
+        String decryptedText = decrypt(encryptedText, secretKey);
+        System.out.println("Decrypted: " + decryptedText);
     }
 }
