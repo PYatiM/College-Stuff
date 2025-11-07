@@ -62,3 +62,35 @@ void main(){
 		}
 	}
 }
+
+
+// OUTPUT
+// Enter name of directory -- yati
+
+
+//  1. Create File	2. Delete File	3. Search File 
+//  4. Display Files	5. Exit
+// Enter your choice -- 1
+
+//  Enter the name of the file -- 1+1=2
+
+
+//  1. Create File	2. Delete File	3. Search File 
+//  4. Display Files	5. Exit
+// Enter your choice -- 4
+
+//  The Files are -- 	1+1=2
+
+//  1. Create File	2. Delete File	3. Search File 
+//  4. Display Files	5. Exit
+// Enter your choice -- 3
+
+//  Enter the name of the file -- 1+1=2
+// File 1+1=2 is found 
+
+//  1. Create File	2. Delete File	3. Search File 
+//  4. Display Files	5. Exit
+// Enter your choice -- 2
+
+//  Enter the name of the file -- 1+1=2
+// File 1+1=2 is deleted 
