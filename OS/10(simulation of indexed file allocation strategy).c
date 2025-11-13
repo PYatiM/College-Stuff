@@ -47,7 +47,7 @@ int main(){
 
 // OUTPUT:
 // Enter the index block: 5
-// 	4 Enter no of blocks needed and no of files for the index 5 on the disk :
+// Enter no of blocks needed and no of files for the index 5 on the disk :
 // 1 2 3 4
 // Allocated
 // File Indexed
@@ -57,9 +57,9 @@ int main(){
 // 5-------->4 : 1
 // Do you want to enter more file(Yes - 1/No - 0): 1
 // Enter the index block: 4
-// 4 index is already allocated
+// index is already allocated
 // Enter the index block: 6
-// 2 Enter no of blocks needed and no of files for the index 6 on the disk :
+// Enter no of blocks needed and no of files for the index 6 on the disk :
 // 7 8
 // Allocated
 // File Indexed
