@@ -1,66 +1,50 @@
 import javax.crypto.Cipher;
-import javax.crypto.KeyGenerator;
-import javax.crypto.SecretKey;
-import javax.crypto.spec.GCMParameterSpec;
-import java.nio.ByteBuffer;
-import java.security.SecureRandom;
+import javax.crypto.spec.IvParameterSpec;
+import javax.crypto.spec.SecretKeySpec;
+import java.nio.charset.StandardCharsets;
 import java.util.Base64;
 
-public class CompactAES {
+public class AESCipher {
 
-    private static final String ALGORITHM = "AES/GCM/NoPadding";
-    private static final int KEY_SIZE = 256;
-    private static final int IV_LENGTH = 12; // 96 bits is recommended
-    private static final int TAG_LENGTH = 128; // in bits
+    private static final String ALGORITHM = "AES/CBC/PKCS5Padding";
+    private static final String KEY_STRING = "UJJWALA123456789"; // Must be 16, 24, or 32 bytes
+    private static final String IV_STRING = "ThisIsAnIVString"; // Must be 16 bytes
 
-    public static String encrypt(String plainText, SecretKey key) throws Exception {
-        byte[] iv = new byte[IV_LENGTH];
-        new SecureRandom().nextBytes(iv); // Create a random IV
-
-        Cipher cipher = Cipher.getInstance(ALGORITHM);
-        GCMParameterSpec gcmSpec = new GCMParameterSpec(TAG_LENGTH, iv);
-        cipher.init(Cipher.ENCRYPT_MODE, key, gcmSpec);
-        
-        byte[] cipherText = cipher.doFinal(plainText.getBytes());
-
-        // Prepend IV to ciphertext for decryption
-        byte[] encrypted = ByteBuffer.allocate(iv.length + cipherText.length)
-                .put(iv).put(cipherText).array();
-        
-        return Base64.getEncoder().encodeToString(encrypted);
-    }
-
-    public static String decrypt(String encryptedText, SecretKey key) throws Exception {
-        byte[] decoded = Base64.getDecoder().decode(encryptedText);
-        ByteBuffer bb = ByteBuffer.wrap(decoded);
-
-        // Extract the IV from the beginning
-        byte[] iv = new byte[IV_LENGTH];
-        bb.get(iv);
-        
-        // Extract the actual ciphertext
-        byte[] cipherText = new byte[bb.remaining()];
-        bb.get(cipherText);
+    public static String encrypt(String plainText) throws Exception {
+        SecretKeySpec secretKey = new SecretKeySpec(KEY_STRING.getBytes(StandardCharsets.UTF_8), "AES");
+        IvParameterSpec ivSpec = new IvParameterSpec(IV_STRING.getBytes(StandardCharsets.UTF_8));
 
         Cipher cipher = Cipher.getInstance(ALGORITHM);
-        GCMParameterSpec gcmSpec = new GCMParameterSpec(TAG_LENGTH, iv);
-        cipher.init(Cipher.DECRYPT_MODE, key, gcmSpec);
+        cipher.init(Cipher.ENCRYPT_MODE, secretKey, ivSpec);
 
-        return new String(cipher.doFinal(cipherText));
+        byte[] encryptedBytes = cipher.doFinal(plainText.getBytes(StandardCharsets.UTF_8));
+        return Base64.getEncoder().encodeToString(encryptedBytes);
     }
 
-    public static void main(String[] args) throws Exception {
-        String plainText = "This is a modern secret message.";
-        System.out.println("Original: " + plainText);
+    public static String decrypt(String encryptedText) throws Exception {
+        SecretKeySpec secretKey = new SecretKeySpec(KEY_STRING.getBytes(StandardCharsets.UTF_8), "AES");
+        IvParameterSpec ivSpec = new IvParameterSpec(IV_STRING.getBytes(StandardCharsets.UTF_8));
 
-        KeyGenerator keyGen = KeyGenerator.getInstance("AES");
-        keyGen.init(KEY_SIZE);
-        SecretKey secretKey = keyGen.generateKey();
+        Cipher cipher = Cipher.getInstance(ALGORITHM);
+        cipher.init(Cipher.DECRYPT_MODE, secretKey, ivSpec);
 
-        String encryptedText = encrypt(plainText, secretKey);
-        System.out.println("Encrypted: " + encryptedText);
-
-        String decryptedText = decrypt(encryptedText, secretKey);
-        System.out.println("Decrypted: " + decryptedText);
+        byte[] originalBytes = cipher.doFinal(Base64.getDecoder().decode(encryptedText));
+        return new String(originalBytes, StandardCharsets.UTF_8);
     }
+
+    public static void main(String[] args) {
+        try {
+            String originalString = "Welcome to DSU!";
+            System.out.println("Original String: " + originalString);
+
+            String encryptedString = encrypt(originalString);
+            System.out.println("Encrypted String: " + encryptedString);
+
+            String decryptedString = decrypt(encryptedString);
+            System.out.println("Decrypted String: " + decryptedString);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
 }
