@@ -47,3 +47,19 @@ public class ElGamalShort {
         sc.close();
     }
 }
+
+
+
+// output
+
+// Using public parameters p=23 and g=5
+// Enter your private key (an integer x < p): 6
+// Your public key is y=8
+
+// Enter the message to encrypt (an integer M < p): 9
+
+// Using a random ephemeral key k=7
+
+// Encrypted ciphertext (c1, c2) = (17, 3)
+
+// Decrypted Message: 9

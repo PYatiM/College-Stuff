@@ -48,3 +48,10 @@ public class AESCipher {
         }
     }
 }
+
+
+// output
+
+// Original String: Welcome to DSU!
+// Encrypted String: eZ8EOxZ+TZvGTnZQdlzOtw==
+// Decrypted String: Welcome to DSU!

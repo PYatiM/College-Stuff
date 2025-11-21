@@ -50,3 +50,9 @@ public class EccKeyAgreement {
         System.out.println("Decrypted message: " + new String(decryptedMessage, "UTF-8"));
     }
 }
+
+
+// output
+
+// Shared secrets match: true
+// Decrypted message: Hello, world!

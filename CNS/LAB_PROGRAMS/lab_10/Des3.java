@@ -40,3 +40,7 @@ public class TripleDESExample {
         System.out.println("Decrypted: " + decryptedText);
     }
 }
+
+// output
+// Encrypted: QgZq0P4lEoZ3aN3sJd6t2fT8qN6m4B3YpVvTqgX8Y2E=
+// Decrypted: This is a secret message.

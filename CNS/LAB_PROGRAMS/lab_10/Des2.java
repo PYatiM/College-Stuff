@@ -60,3 +60,9 @@ public class DoubleDES {
         System.out.println("Decrypted Text: " + decryptedText);
     }
 }
+
+
+// output
+
+// Encrypted Text: u4f8K2b9Q3rVh1sXz7pN0qL6cYwR5tE8mA2sD9fG1hJ0kL3oP4rSg==
+// Decrypted Text: This is a secret message for Double DES.
